@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.0.0
 MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lkk2yapi", "src/lkk2yapi.csproj", "{B37FE1BF-1BD8-44E4-ADA9-1FD8612CB742}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lkk2yapi", "src/web/lkk2yapi.csproj", "{B37FE1BF-1BD8-44E4-ADA9-1FD8612CB742}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
