@@ -3,7 +3,6 @@ using Lykke.Service.Lkk2Y_Api.Models;
 
 namespace Lykke.Service.Lkk2Y_Api.Controllers
 {
-    [Route("api/[controller]")]
     public class ValuesController : Controller
     {
         [HttpPost("api/subscribe")]

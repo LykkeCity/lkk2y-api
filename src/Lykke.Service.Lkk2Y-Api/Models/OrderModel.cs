@@ -1,11 +1,12 @@
+using Lykke.Service.Lkk2Y_Api.Core;
 using Newtonsoft.Json;
 
 namespace Lykke.Service.Lkk2Y_Api.Models
 {
-    public class OrderModel
+    public class OrderModel :ILkk2yOrder
     {
         [JsonProperty("amount")]
-        public string Amount {get;set;}
+        public double Amount {get;set;}
 
         [JsonProperty("country")]        
         public string Country {get;set;}
