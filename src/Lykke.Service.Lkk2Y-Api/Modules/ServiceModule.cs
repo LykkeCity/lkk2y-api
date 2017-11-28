@@ -1,6 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AzureStorage.Tables;
 using Common.Log;
+using Lykke.Service.Lkk2Y_Api.AzureRepositories;
+using Lykke.Service.Lkk2Y_Api.Core;
 using Lykke.Service.Lkk2Y_Api.Core.Services;
 using Lykke.Service.Lkk2Y_Api.Services;
 using Lykke.Service.Lkk2Y_Api.Settings;
@@ -49,6 +52,19 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
             // TODO: Add your dependencies here
 
             builder.Populate(_services);
+
+            BindRepositories(builder);
         }
+
+        private void BindRepositories(ContainerBuilder builder)
+        {
+
+//             builder.RegisterInstance<ILkk2yOrdersRepository>(
+//                new Lkk2yOrderRepository(
+//                    AzureTableStorage<Lkk2yOrderEntity>.Create(_settings.ConnectionString(x => x.Db.Lkk2yConnString), "Orders", _log)));
+
+
+        }
+
     }
 }

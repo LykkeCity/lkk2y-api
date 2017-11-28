@@ -40,11 +40,19 @@ namespace Lykke.Service.Lkk2Y_Api
         {
             try
             {
+
+                services.AddCors(options =>
+                          {
+                              options.AddPolicy("AllowAll",
+                                  b => b.AllowAnyOrigin());
+                          });
+
                 services.AddMvc()
                     .AddJsonOptions(options =>
                     {
                         options.SerializerSettings.ContractResolver =
                             new Newtonsoft.Json.Serialization.DefaultContractResolver();
+
                     });
 
                 services.AddSwaggerGen(options =>
@@ -78,7 +86,14 @@ namespace Lykke.Service.Lkk2Y_Api
                     app.UseDeveloperExceptionPage();
                 }
 
-                app.UseLykkeMiddleware("Lkk2Y_Api", ex => new {Message = "Technical problem"});
+                app.UseLykkeMiddleware("Lkk2Y_Api", ex => new { Message = "Technical problem" });
+
+                app.UseCors(builder =>
+                    {
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                        builder.WithOrigins("AllowAll");
+                    });
 
 
                 app.UseMvc();
@@ -89,7 +104,7 @@ namespace Lykke.Service.Lkk2Y_Api
                     x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
                 app.UseStaticFiles();
-                
+
                 appLifetime.ApplicationStarted.Register(() => StartApplication().Wait());
                 appLifetime.ApplicationStopping.Register(() => StopApplication().Wait());
                 appLifetime.ApplicationStopped.Register(() => CleanUp().Wait());
