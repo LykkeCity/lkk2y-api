@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/LykkeCity/Lykke.Service.Lkk2Y-Api.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Lykke</PackageTags>
+    <RootNamespace>Lykke.Service.Lkk2Y_Api.Client</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

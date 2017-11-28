@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <Version>1.0.1</Version>
     <AssemblyName>Lykke.Service.Lkk2Y-Api</AssemblyName>
-    <RootNamespace>Lykke.Service.Lkk2Y-Api</RootNamespace>
+    <RootNamespace>Lykke.Service.Lkk2Y_Api</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
