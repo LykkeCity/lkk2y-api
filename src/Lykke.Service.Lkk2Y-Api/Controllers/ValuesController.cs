@@ -6,19 +6,19 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        [HttpPost]
+        [HttpPost("api/subscribe")]
         public object Subscribe([FromBody]SubscribeModel model)
         {
             return new {result = "OK", model};
         }
 
-        [HttpPost]
+        [HttpPost("api/order")]
         public object Order([FromBody]OrderModel model)
         {
             return new {result = "OK", model};
         }
 
-        [HttpPost]
+        [HttpPost("api/convert")]
         public object Convert([FromBody]ConvertModel model)
         {
             return new {result = "OK", model};
