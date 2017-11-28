@@ -1,7 +1,4 @@
-﻿using Lykke.Service.Lkk2Y_Api.Core.Settings.ServiceSettings;
-using Lykke.Service.Lkk2Y_Api.Core.Settings.SlackNotifications;
-
-namespace Lykke.Service.Lkk2Y_Api.Core.Settings
+﻿namespace Lykke.Service.Lkk2Y_Api.Settings
 {
     public class AppSettings
     {

@@ -1,4 +1,4 @@
-namespace Lykke.Service.Lkk2Y_Api.Core.Settings.ServiceSettings
+namespace Lykke.Service.Lkk2Y_Api.Settings
 {
     public class Lkk2Y_ApiSettings
     {

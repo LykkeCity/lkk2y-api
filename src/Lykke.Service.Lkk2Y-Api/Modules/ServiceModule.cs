@@ -2,8 +2,8 @@
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
 using Lykke.Service.Lkk2Y_Api.Core.Services;
-using Lykke.Service.Lkk2Y_Api.Core.Settings.ServiceSettings;
 using Lykke.Service.Lkk2Y_Api.Services;
+using Lykke.Service.Lkk2Y_Api.Settings;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 
