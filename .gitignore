@@ -59,3 +59,6 @@ node_modules
 **/launchSettings.json
 **/appsettings.*.json
 
+.vscode
+appsettings.json
+
