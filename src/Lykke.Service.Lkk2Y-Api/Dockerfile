@@ -1,4 +1,4 @@
 FROM microsoft/aspnetcore:2.0
-WORKDIR /app/Lykke.Service.Lkk2Y-Api
+WORKDIR /app
 COPY . .
-ENTRYPOINT ["dotnet", "Lykke.Service.Lkk2Y_Api.dll"]
+ENTRYPOINT ["dotnet", "Lykke.Service.Lkk2Y-Api.dll"]
