@@ -78,6 +78,7 @@ namespace Lykke.Service.Lkk2Y_Api
                     app.UseDeveloperExceptionPage();
                 }
 
+                app.UseLykkeMiddleware("Lkk2Y_Api", ex => new {Message = "Technical problem"});
 
 
                 app.UseMvc();
@@ -88,7 +89,6 @@ namespace Lykke.Service.Lkk2Y_Api
                     x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
                 app.UseStaticFiles();
-                app.UseLykkeMiddleware("Lkk2Y_Api", ex => new {Message = "Technical problem"});
                 
                 appLifetime.ApplicationStarted.Register(() => StartApplication().Wait());
                 appLifetime.ApplicationStopping.Register(() => StopApplication().Wait());
