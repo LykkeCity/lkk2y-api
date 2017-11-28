@@ -7,7 +7,7 @@ namespace Lykke.Service.Lkk2Y_Api.Models
 {
     public class SubscribeModel
     {
-        [JsonProperty("subscribe")]        
+        [JsonProperty("email")]        
         public string Email { get; set; }
     }
     
