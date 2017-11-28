@@ -9,14 +9,21 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         [HttpPost]
         public object Subscribe([FromBody]SubscribeModel model)
         {
-            return new {result = "OK"};
+            return new {result = "OK", model};
         }
 
-        // PUT api/values/5
         [HttpPost]
-        public object Order([FromBody]string model)
+        public object Order([FromBody]OrderModel model)
         {
-            return new {result = "OK"};
+            return new {result = "OK", model};
         }
+
+        [HttpPost]
+        public object Convert([FromBody]ConvertModel model)
+        {
+            return new {result = "OK", model};
+        }
+
     }
+
 }
