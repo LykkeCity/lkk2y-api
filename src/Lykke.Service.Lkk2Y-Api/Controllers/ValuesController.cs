@@ -21,7 +21,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         [HttpPost("api/convert")]
         public object Convert([FromBody]ConvertModel model)
         {
-            return new {result = "OK", model};
+            return new {asset = model.To, amount = model.Amount*2};
         }
 
     }
