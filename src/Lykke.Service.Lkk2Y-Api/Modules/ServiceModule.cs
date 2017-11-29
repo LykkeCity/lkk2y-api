@@ -59,10 +59,14 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
         private void BindRepositories(ContainerBuilder builder)
         {
 
-//             builder.RegisterInstance<ILkk2yOrdersRepository>(
-//                new Lkk2yOrderRepository(
-//                    AzureTableStorage<Lkk2yOrderEntity>.Create(_settings.ConnectionString(x => x.Db.Lkk2yConnString), "Orders", _log)));
+             builder.RegisterInstance<ILkk2yOrdersRepository>(
+                new Lkk2yOrderRepository(
+                    AzureTableStorage<Lkk2yOrderEntity>.Create(_settings.ConnectionString(x => x.Db.Lkk2yConnString), "Orders", _log)));
 
+
+             builder.RegisterInstance<ILkk2yInfoRepository>(
+                new Lkk2yInfoRepository(
+                    AzureTableStorage<Lkk2yInfoEntity>.Create(_settings.ConnectionString(x => x.Db.Lkk2yConnString), "Info", _log)));
 
         }
 
