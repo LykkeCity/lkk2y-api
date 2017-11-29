@@ -54,6 +54,9 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
             builder.Populate(_services);
 
             BindRepositories(builder);
+
+            builder.RegisterInstance<RateConverterSrv>(new RateConverterSrv(_settings.CurrentValue.RateConverterUrl));
+
         }
 
         private void BindRepositories(ContainerBuilder builder)
@@ -67,6 +70,8 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
              builder.RegisterInstance<ILkk2yInfoRepository>(
                 new Lkk2yInfoRepository(
                     AzureTableStorage<Lkk2yInfoEntity>.Create(_settings.ConnectionString(x => x.Db.Lkk2yConnString), "Info", _log)));
+
+            
 
         }
 

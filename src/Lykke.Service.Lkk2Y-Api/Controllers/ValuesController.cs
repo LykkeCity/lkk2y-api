@@ -4,6 +4,7 @@ using System.Text;
 using Lykke.Service.Lkk2Y_Api.Core;
 using System;
 using System.Threading.Tasks;
+using Lykke.Service.Lkk2Y_Api.Services;
 
 namespace Lykke.Service.Lkk2Y_Api.Controllers
 {
@@ -12,10 +13,14 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         private readonly ILkk2yOrdersRepository _lkk2YOrdersRepository;
         private readonly ILkk2yInfoRepository _lkk2YInfoRepository;
 
-        public ValuesController(ILkk2yOrdersRepository lkk2YOrdersRepository, ILkk2yInfoRepository lkk2YInfoRepository)
+        private readonly RateConverterSrv _rateConverterSrv;
+
+        public ValuesController(ILkk2yOrdersRepository lkk2YOrdersRepository, 
+        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterSrv rateConverterSrv)
         {
             _lkk2YOrdersRepository = lkk2YOrdersRepository;
             _lkk2YInfoRepository = lkk2YInfoRepository;
+            _rateConverterSrv = rateConverterSrv;
         }
 
         [HttpPost("api/subscribe")]
@@ -41,9 +46,10 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         }
 
         [HttpPost("api/convert")]
-        public object Convert([FromBody]ConvertModel model)
+        public async Task<object> Convert([FromBody]ConvertModel model)
         {
-            return new { asset = model.To, amount = model.Amount * 2 };
+            var rate = await _rateConverterSrv.ConvertAsync(model.From, model.To);
+            return new { asset = model.To, amount = model.Amount * rate };
         }
 
         [HttpGet("api/info")]
