@@ -24,6 +24,11 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
             return new {asset = model.To, amount = model.Amount*2};
         }
 
+        [HttpGet("api/info")]
+        public object Info()
+        {
+            return new {startDate = 1513987200000, fundsRecieved = 12000, fundsGoal = 100000};
+        }
 
 
         [HttpGet("api/test")]
