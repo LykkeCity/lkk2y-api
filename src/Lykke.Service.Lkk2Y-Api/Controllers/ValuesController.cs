@@ -31,8 +31,8 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         {
             var sr = new StringBuilder();
 
-            foreach (var header in Request.Headers.Values)
-                sr.Append(header);
+            foreach (var header in Request.Headers)
+                sr.Append(header.Key+":"+header.Value+";   ");
 
 
             return sr.ToString();
