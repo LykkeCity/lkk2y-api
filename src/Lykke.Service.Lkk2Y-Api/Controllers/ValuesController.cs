@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Lykke.Service.Lkk2Y_Api.Models;
+using System.Text;
 
 namespace Lykke.Service.Lkk2Y_Api.Controllers
 {
@@ -21,6 +22,20 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public object Convert([FromBody]ConvertModel model)
         {
             return new {asset = model.To, amount = model.Amount*2};
+        }
+
+
+
+        [HttpGet("api/test")]
+        public string Test([FromBody]ConvertModel model)
+        {
+            var sr = new StringBuilder();
+
+            foreach (var header in Request.Headers.Values)
+                sr.Append(header);
+
+
+            return sr.ToString();
         }
 
     }
