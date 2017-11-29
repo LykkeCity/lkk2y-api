@@ -27,7 +27,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 
 
         [HttpGet("api/test")]
-        public string Test([FromBody]ConvertModel model)
+        public string Test()
         {
             var sr = new StringBuilder();
 
