@@ -33,10 +33,12 @@ namespace Lykke.Service.Lkk2Y_Api.Services
         {
             var chfRate = _lkk2YToChf.GetRate(volume);
 
-            if (assetTo == CHFAsset)
-                return chfRate;
+            var chfVolume = chfRate * volume;
 
-            return await _rateConverterClient.GetRateAsync(CHFAsset, assetTo);
+            if (assetTo == CHFAsset)
+                return chfVolume;
+
+            return await _rateConverterClient.GetRateAsync(CHFAsset, assetTo) * chfVolume;
 
         }
 

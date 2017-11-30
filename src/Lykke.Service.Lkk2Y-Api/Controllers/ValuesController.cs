@@ -48,8 +48,8 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         [HttpPost("api/convert")]
         public async Task<object> Convert([FromBody]ConvertModel model)
         {
-            var rate = await _rateConverterSrv.ConvertAsync(model.From, model.To, model.Amount);
-            return new { asset = model.To, amount = model.Amount * rate };
+            var amount = await _rateConverterSrv.ConvertAsync(model.From, model.To, model.Amount);
+            return new { asset = model.To, amount };
         }
 
         [HttpGet("api/info")]
