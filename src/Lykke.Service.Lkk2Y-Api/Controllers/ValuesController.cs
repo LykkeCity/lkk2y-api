@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Lykke.Service.Lkk2Y_Api.Models;
-using System.Text;
 using Lykke.Service.Lkk2Y_Api.Core;
 using System;
 using System.Threading.Tasks;
@@ -10,12 +9,12 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 {
     public class ValuesController : Controller
     {
-        private readonly ILkk2yOrdersRepository _lkk2YOrdersRepository;
+        private readonly ILkk2YOrdersRepository _lkk2YOrdersRepository;
         private readonly ILkk2yInfoRepository _lkk2YInfoRepository;
 
         private readonly RateConverterService _rateConverterSrv;
 
-        public ValuesController(ILkk2yOrdersRepository lkk2YOrdersRepository, 
+        public ValuesController(ILkk2YOrdersRepository lkk2YOrdersRepository, 
         ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv)
         {
             _lkk2YOrdersRepository = lkk2YOrdersRepository;
@@ -30,18 +29,20 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         }
 
         [HttpPost("api/order")]
-        public async Task<object> Order([FromBody]OrderModel model)
+        public async Task<object> Order([FromBody] OrderModel model)
         {
 
-            try
+            model.UsdAmount = model.Currency == "USD"
+                ? model.Amount
+                : model.UsdAmount = await _rateConverterSrv.ConvertAsync(model.Currency, "USD", model.Amount);
+
+            await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
+
+            return new
             {
-                await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
-                return new { result = "OK", model };
-            }
-            catch
-            {
-                return new { result = "OK", model };
-            }
+                result = "OK",
+                model
+            };
 
         }
 
@@ -55,8 +56,19 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         [HttpGet("api/info")]
         public async Task<object> Info()
         {
-            var info = await _lkk2YInfoRepository.GetInfoAsync();
-            return new { startDate = 1513080000, fundsRecieved = info.FundsRecieved, fundsGoal = info.FundsGoal };
+            var infoTask = _lkk2YInfoRepository.GetInfoAsync();
+            var totalTaks = _lkk2YOrdersRepository.GetUsdTotalAsync();
+
+            await infoTask;
+            await totalTaks;
+
+            return new
+            {
+                startDate = 1513080000,
+                fundsRecieved = infoTask.Result.FundsRecieved,
+                fundsGoal = infoTask.Result.FundsGoal,
+                fundsTotal = totalTaks.Result
+            };
         }
 
     }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Lykke.Service.Lkk2Y_Api.Models
 {
-    public class OrderModel :ILkk2yOrder
+    public class OrderModel :ILkk2YOrder
     {
         [JsonProperty("amount")]
         public double Amount {get;set;}
@@ -23,5 +23,6 @@ namespace Lykke.Service.Lkk2Y_Api.Models
         [JsonProperty("last_name")] 
         public string LastName { get; set; }
 
+        public double UsdAmount { get; set; }
     }
 }

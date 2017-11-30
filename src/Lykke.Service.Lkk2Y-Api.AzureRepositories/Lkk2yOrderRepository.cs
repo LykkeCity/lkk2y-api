@@ -6,14 +6,12 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 {
-    public class Lkk2yOrderEntity : TableEntity, ILkk2yOrder
+    public class Lkk2YOrderEntity : TableEntity, ILkk2YOrder
     {
-
-        public static string GeneratePartitionKey()
+        private static string GeneratePartitionKey()
         {
             return "o";
         }
-
 
 
         public double Amount { get; set; }
@@ -28,10 +26,12 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
         public string LastName { get; set; }
 
-        public static Lkk2yOrderEntity Create(ILkk2yOrder src)
+        public double UsdAmount { get; set; }
+
+        public static Lkk2YOrderEntity Create(ILkk2YOrder src)
         {
 
-            return new Lkk2yOrderEntity
+            return new Lkk2YOrderEntity
             {
                 PartitionKey = GeneratePartitionKey(),
                 Amount = src.Amount,
@@ -39,26 +39,105 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
                 Currency = src.Currency,
                 Email = src.Email,
                 FirstName = src.FirstName,
-                LastName = src.LastName
+                LastName = src.LastName,
+                UsdAmount = src.UsdAmount
             };
 
         }
 
     }
 
-    public class Lkk2yOrderRepository : ILkk2yOrdersRepository
+    public class Lkk2YTotalEntity : TableEntity
     {
-        public INoSQLTableStorage<Lkk2yOrderEntity> _tableStorage { get; }
 
-        public Lkk2yOrderRepository(INoSQLTableStorage<Lkk2yOrderEntity> tableStorage)
+        public static string GeneratePartitionKey()
         {
+            return "t";
+        }
+
+        public static string GenerateRowKey()
+        {
+            return "t";
+        }
+
+
+        public double Total { get; set; }
+
+
+        public static Lkk2YTotalEntity Create()
+        {
+            return new Lkk2YTotalEntity
+            {
+                PartitionKey = GeneratePartitionKey(),
+                RowKey = GenerateRowKey()
+            };
+        }
+
+    }
+
+
+    public class Lkk2YOrderRepository : ILkk2YOrdersRepository
+    {
+        private readonly INoSQLTableStorage<Lkk2YOrderEntity> _tableStorage;
+
+        readonly INoSQLTableStorage<Lkk2YTotalEntity> _totalTableStorage;
+
+        public Lkk2YOrderRepository(INoSQLTableStorage<Lkk2YOrderEntity> tableStorage, 
+                                    INoSQLTableStorage<Lkk2YTotalEntity> totalTableStorage)
+        {
+            _totalTableStorage = totalTableStorage;
             _tableStorage = tableStorage;
+
+            InitTotal().Wait();
         }
 
-        public async Task RegisterAsync(DateTime dateTime, ILkk2yOrder order)
+
+        private async Task InitTotal()
         {
-            var newEntity = Lkk2yOrderEntity.Create(order);
-            await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
+
+
+            try
+            {
+                var newEntity = Lkk2YTotalEntity.Create();
+                await _totalTableStorage.InsertAsync(newEntity);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Total entity already exists");
+            }
+
         }
+
+        private async Task UpdateTotal(double addValue)
+        {
+
+            var partitionKey = Lkk2YTotalEntity.GeneratePartitionKey();
+            var rowKey = Lkk2YTotalEntity.GenerateRowKey();
+
+            await _totalTableStorage.ReplaceAsync(partitionKey, rowKey, entity =>
+            {
+                entity.Total += addValue;
+                return entity;
+            });
+
+        }
+
+        public async Task RegisterAsync(DateTime dateTime, ILkk2YOrder order)
+        {
+            var newEntity = Lkk2YOrderEntity.Create(order);
+            await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
+            await UpdateTotal(order.UsdAmount);
+        }
+
+        public async Task<double> GetUsdTotalAsync()
+        {
+            var partitionKey = Lkk2YTotalEntity.GeneratePartitionKey();
+            var rowKey = Lkk2YTotalEntity.GenerateRowKey();
+
+            var entity = await _totalTableStorage.GetDataAsync(partitionKey, rowKey);
+
+            return entity?.Total ?? 0;
+        }
+
     }
 }
