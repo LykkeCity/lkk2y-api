@@ -2,20 +2,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common;
 using Flurl.Http;
+using Lykke.Service.Lkk2Y_Api.Core;
 
 namespace Lykke.Service.Lkk2Y_Api.Services
 {
-    public class RateConverterSrv
+    public class RateConverterClient : IRateConverterClient
     {
 
         private string _url;
 
-
-        public RateConverterSrv(string url)
+        public RateConverterClient(string url)
         {
             _url = url.AddLastSymbolIfNotExists('/');
         }
-
 
         private Dictionary<string, double> _cache = new Dictionary<string, double>();
 
@@ -58,7 +57,7 @@ namespace Lykke.Service.Lkk2Y_Api.Services
         }
 
 
-        public async Task<double> ConvertAsync(string assetFrom, string assetTo)
+        public async Task<double> GetRateAsync(string assetFrom, string assetTo)
         {
             var url = $"{_url}api/RateCalculator/GetAmountInBase/{assetFrom}/{assetTo}/1";
 
@@ -76,8 +75,6 @@ namespace Lykke.Service.Lkk2Y_Api.Services
             {
                 return GetFromCache(assetFrom, assetTo);
             }
-
         }
-
     }
 }

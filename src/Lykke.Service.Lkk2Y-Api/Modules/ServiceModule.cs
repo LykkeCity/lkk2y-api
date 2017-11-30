@@ -49,13 +49,19 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
+            builder.RegisterType<Lkk2yToChf>()
+                .As<ILkk2yToChf>();
+
+            builder.RegisterType<ShutdownManager>()
+                .As<IShutdownManager>();
+
             // TODO: Add your dependencies here
 
             builder.Populate(_services);
 
             BindRepositories(builder);
 
-            builder.RegisterInstance<RateConverterSrv>(new RateConverterSrv(_settings.CurrentValue.RateConverterUrl));
+            builder.RegisterInstance<IRateConverterClient>(new RateConverterClient(_settings.CurrentValue.RateConverterUrl));
 
         }
 

@@ -13,10 +13,10 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         private readonly ILkk2yOrdersRepository _lkk2YOrdersRepository;
         private readonly ILkk2yInfoRepository _lkk2YInfoRepository;
 
-        private readonly RateConverterSrv _rateConverterSrv;
+        private readonly RateConverterService _rateConverterSrv;
 
         public ValuesController(ILkk2yOrdersRepository lkk2YOrdersRepository, 
-        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterSrv rateConverterSrv)
+        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv)
         {
             _lkk2YOrdersRepository = lkk2YOrdersRepository;
             _lkk2YInfoRepository = lkk2YInfoRepository;
@@ -48,7 +48,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         [HttpPost("api/convert")]
         public async Task<object> Convert([FromBody]ConvertModel model)
         {
-            var rate = await _rateConverterSrv.ConvertAsync(model.From, model.To);
+            var rate = await _rateConverterSrv.ConvertAsync(model.From, model.To, model.Amount);
             return new { asset = model.To, amount = model.Amount * rate };
         }
 
