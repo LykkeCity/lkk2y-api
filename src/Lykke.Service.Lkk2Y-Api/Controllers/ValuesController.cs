@@ -56,7 +56,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Info()
         {
             var info = await _lkk2YInfoRepository.GetInfoAsync();
-            return new { startDate = 1513987200000, fundsRecieved = info.FundsRecieved, fundsGoal = info.FundsGoal };
+            return new { startDate = 1513080000, fundsRecieved = info.FundsRecieved, fundsGoal = info.FundsGoal };
         }
 
     }
