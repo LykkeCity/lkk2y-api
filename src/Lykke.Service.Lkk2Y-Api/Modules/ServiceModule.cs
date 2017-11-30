@@ -55,6 +55,9 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
+            builder.RegisterType<RateConverterService>()
+                .As<RateConverterService>();
+
             // TODO: Add your dependencies here
 
             builder.Populate(_services);
