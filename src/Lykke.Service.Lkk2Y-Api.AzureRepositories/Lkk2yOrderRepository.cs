@@ -27,6 +27,8 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         public string LastName { get; set; }
 
         public double UsdAmount { get; set; }
+        
+        public string Ip { get; set; }
 
         public static Lkk2YOrderEntity Create(ILkk2YOrder src)
         {
@@ -40,7 +42,8 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
                 Email = src.Email,
                 FirstName = src.FirstName,
                 LastName = src.LastName,
-                UsdAmount = src.UsdAmount
+                UsdAmount = src.UsdAmount,
+                Ip = src.Ip
             };
 
         }

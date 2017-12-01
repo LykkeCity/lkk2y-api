@@ -24,5 +24,6 @@ namespace Lykke.Service.Lkk2Y_Api.Models
         public string LastName { get; set; }
 
         public double UsdAmount { get; set; }
+        public string Ip { get; set; }
     }
 }

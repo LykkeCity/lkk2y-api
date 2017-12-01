@@ -36,6 +36,9 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 ? model.Amount
                 : model.UsdAmount = await _rateConverterSrv.ConvertAsync(model.Currency, "USD", model.Amount);
 
+
+            model.Ip = this.GetIp();
+
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
 
             return new

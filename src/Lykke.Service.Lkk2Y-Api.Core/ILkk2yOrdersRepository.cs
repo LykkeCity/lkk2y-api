@@ -19,6 +19,8 @@ namespace Lykke.Service.Lkk2Y_Api.Core
         string LastName { get; }
 
         double UsdAmount { get; }
+        
+        string Ip { get; }
     }
 
     public interface ILkk2YOrdersRepository
