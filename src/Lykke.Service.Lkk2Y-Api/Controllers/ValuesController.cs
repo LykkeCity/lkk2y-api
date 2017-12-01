@@ -64,6 +64,14 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Convert([FromBody]ConvertModel model)
         {
 
+
+            if (model == null){
+                Console.WriteLine("Convert: !!!! Model is null !!!!!");
+                return NotFound();
+            }
+
+            Console.WriteLine("Convert:" + model.ToJson());
+
             model.From = model.From.Trim();
             model.To = model.To.Trim();
 
