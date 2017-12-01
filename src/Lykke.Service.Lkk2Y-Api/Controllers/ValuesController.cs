@@ -32,6 +32,8 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Order([FromBody] OrderModel model)
         {
 
+            model.Currency = model.Currency.Trim();
+
             model.UsdAmount = model.Currency == "USD"
                 ? model.Amount
                 : model.UsdAmount = await _rateConverterSrv.ConvertAsync(model.Currency, "USD", model.Amount);
@@ -52,6 +54,10 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         [HttpPost("api/convert")]
         public async Task<object> Convert([FromBody]ConvertModel model)
         {
+
+            model.From = model.From.Trim();
+            model.To = model.To.Trim();
+
             var amount = await _rateConverterSrv.ConvertAsync(model.From, model.To, model.Amount);
             return new { asset = model.To, amount };
         }
