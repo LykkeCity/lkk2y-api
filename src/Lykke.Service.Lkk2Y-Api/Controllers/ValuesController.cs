@@ -32,6 +32,12 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Order([FromBody] OrderModel model)
         {
 
+
+            if (model == null){
+                Console.WriteLine("!!!! Model is null !!!!!");
+                return NotFound();
+            }
+
             model.Currency = model.Currency.Trim();
 
             model.UsdAmount = model.Currency == "USD"
