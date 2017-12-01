@@ -15,12 +15,16 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 
         private readonly RateConverterService _rateConverterSrv;
 
+
+        private readonly ILkk2yToChf _lkk2YToChf;
+
         public ValuesController(ILkk2YOrdersRepository lkk2YOrdersRepository, 
-        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv)
+        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv, ILkk2yToChf lkk2YToChf)
         {
             _lkk2YOrdersRepository = lkk2YOrdersRepository;
             _lkk2YInfoRepository = lkk2YInfoRepository;
             _rateConverterSrv = rateConverterSrv;
+            _lkk2YToChf = lkk2YToChf;
         }
 
         [HttpPost("api/subscribe")]
@@ -46,12 +50,10 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 
             model.Currency = model.Currency.Trim();
 
-            model.UsdAmount = model.Currency == "USD"
-                ? model.Amount
-                : model.UsdAmount = await _rateConverterSrv.ConvertAsync(model.Currency, "USD", model.Amount);
+            model.UsdAmount = await _rateConverterSrv.ConvertAsync(RateConverterService.LKK2YAsset, 
+              RateConverterService.CHFAsset, model.Amount);
 
             Console.WriteLine("Order with USD:" + model.ToJson());
-
 
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
 
