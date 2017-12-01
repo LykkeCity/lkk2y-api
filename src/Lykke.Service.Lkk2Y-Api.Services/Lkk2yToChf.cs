@@ -6,7 +6,7 @@ namespace Lykke.Service.Lkk2Y_Api.Services
     {
         public double GetRate(double volume)
         {
-            return 0.21;
+            return 0.24;
         }
     }
 }
