@@ -33,14 +33,16 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Order([FromBody] OrderModel model)
         {
 
+            var body = await this.Request.BodyAsStringAsync();
 
             if (model == null){
-                Console.WriteLine("!!!! Model is null !!!!!");
+                Console.WriteLine("Order: !!!! Model is null !!!!!; Body="+body);
+
                 return NotFound();
             }
             model.Ip = this.GetIp();
 
-            Console.WriteLine("Order:" + model.ToJson());
+            Console.WriteLine("Order:" + model.ToJson()+"; Body="+body);
 
             model.Currency = model.Currency.Trim();
 
@@ -66,12 +68,15 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         {
 
 
+            var body = await this.Request.BodyAsStringAsync();
+
+
             if (model == null){
-                Console.WriteLine("Convert: !!!! Model is null !!!!!");
+                Console.WriteLine("Convert: !!!! Model is null !!!!!; Body: "+body);
                 return NotFound();
             }
 
-            Console.WriteLine("Convert:" + model.ToJson());
+            Console.WriteLine("Convert:" + model.ToJson()+"; Body: "+body);
 
             model.From = model.From.Trim();
             model.To = model.To.Trim();

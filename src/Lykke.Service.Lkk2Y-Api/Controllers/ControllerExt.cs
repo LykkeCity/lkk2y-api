@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -9,6 +12,26 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 {
     public static class ControllerExt
     {
+
+
+
+        public static async Task<string> BodyAsStringAsync(this HttpRequest httpRequest){
+
+            try
+            {
+                httpRequest.Body.Position = 0;
+                
+                using (var reader = new StreamReader(httpRequest.Body, Encoding.UTF8))
+                {
+                    return await reader.ReadToEndAsync();
+                }
+
+            }
+            catch (Exception){
+                return "";
+            }
+
+        }
         
         private static T GetHeaderValueAs<T>(HttpContext httpContext, string headerName)
         {
