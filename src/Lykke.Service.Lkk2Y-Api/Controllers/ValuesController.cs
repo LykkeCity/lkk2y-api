@@ -38,6 +38,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 Console.WriteLine("!!!! Model is null !!!!!");
                 return NotFound();
             }
+            model.Ip = this.GetIp();
 
             Console.WriteLine("Order:" + model.ToJson());
 
@@ -47,8 +48,8 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 ? model.Amount
                 : model.UsdAmount = await _rateConverterSrv.ConvertAsync(model.Currency, "USD", model.Amount);
 
+            Console.WriteLine("Order with USD:" + model.ToJson());
 
-            model.Ip = this.GetIp();
 
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
 

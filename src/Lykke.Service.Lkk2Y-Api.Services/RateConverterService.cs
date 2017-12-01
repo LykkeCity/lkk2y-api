@@ -48,7 +48,7 @@ namespace Lykke.Service.Lkk2Y_Api.Services
             if (assetFrom == LKK2YAsset)
                 return await ConvertFromLKK2yAsync(assetTo, volume);
 
-            return await _rateConverterClient.GetRateAsync(assetFrom, assetTo);
+            return await _rateConverterClient.GetRateAsync(assetFrom, assetTo) * volume;
         }
 
     }
