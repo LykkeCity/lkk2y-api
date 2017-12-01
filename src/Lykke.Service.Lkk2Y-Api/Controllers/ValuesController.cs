@@ -4,6 +4,7 @@ using Lykke.Service.Lkk2Y_Api.Core;
 using System;
 using System.Threading.Tasks;
 using Lykke.Service.Lkk2Y_Api.Services;
+using Common;
 
 namespace Lykke.Service.Lkk2Y_Api.Controllers
 {
@@ -37,6 +38,8 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 Console.WriteLine("!!!! Model is null !!!!!");
                 return NotFound();
             }
+
+            Console.WriteLine("Order:" + model.ToJson());
 
             model.Currency = model.Currency.Trim();
 
