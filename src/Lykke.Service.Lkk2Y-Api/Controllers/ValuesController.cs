@@ -14,17 +14,17 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         private readonly ILkk2yInfoRepository _lkk2YInfoRepository;
 
         private readonly RateConverterService _rateConverterSrv;
+        private readonly TransctionMailSender _transctionMailSender;
 
-
-        private readonly ILkk2yToChf _lkk2YToChf;
 
         public ValuesController(ILkk2YOrdersRepository lkk2YOrdersRepository, 
-        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv, ILkk2yToChf lkk2YToChf)
+        ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv, 
+            TransctionMailSender transctionMailSender)
         {
             _lkk2YOrdersRepository = lkk2YOrdersRepository;
             _lkk2YInfoRepository = lkk2YInfoRepository;
             _rateConverterSrv = rateConverterSrv;
-            _lkk2YToChf = lkk2YToChf;
+            _transctionMailSender = transctionMailSender;
         }
 
         [HttpPost("api/subscribe")]
@@ -37,7 +37,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Order([FromBody] OrderModel model)
         {
 
-            var body = await this.Request.BodyAsStringAsync();
+            var body = await Request.BodyAsStringAsync();
 
             if (model == null){
                 Console.WriteLine("Order: !!!! Model is null !!!!!; Body="+body);
@@ -57,6 +57,8 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
 
+            await _transctionMailSender.SenderTransactionalEmail(model.Email);
+
             return new
             {
                 result = "OK",
@@ -69,8 +71,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> Convert([FromBody]ConvertModel model)
         {
 
-
-            var body = await this.Request.BodyAsStringAsync();
+            var body = await Request.BodyAsStringAsync();
 
 
             if (model == null){

@@ -6,6 +6,7 @@ using Lykke.Service.Lkk2Y_Api.AzureRepositories;
 using Lykke.Service.Lkk2Y_Api.Core;
 using Lykke.Service.Lkk2Y_Api.Core.Services;
 using Lykke.Service.Lkk2Y_Api.Services;
+using Lykke.Service.Lkk2Y_Api.Services.Smtp;
 using Lykke.Service.Lkk2Y_Api.Settings;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,11 +61,21 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
 
             // TODO: Add your dependencies here
 
+            var settingsInstance = _settings.CurrentValue;
+
             builder.Populate(_services);
 
             BindRepositories(builder);
 
-            builder.RegisterInstance<IRateConverterClient>(new RateConverterClient(_settings.CurrentValue.RateConverterUrl));
+            var smtpSender = new SmtpSender(settingsInstance.SmtpSettings);
+
+            builder.RegisterInstance(smtpSender);
+
+            builder.RegisterInstance(
+                new TransctionMailSender(settingsInstance.EmailTemplateUrl, smtpSender));
+            
+            builder.RegisterInstance<IRateConverterClient>(
+                new RateConverterClient(settingsInstance.RateConverterUrl));
 
         }
 
