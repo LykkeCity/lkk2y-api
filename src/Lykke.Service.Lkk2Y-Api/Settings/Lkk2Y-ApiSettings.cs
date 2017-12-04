@@ -4,7 +4,6 @@ namespace Lykke.Service.Lkk2Y_Api.Settings
     {
         public DbSettings Db { get; set; }
         
-        public SmtpSettingsModel SmtpSettings { get; set; }
                 
         public string EmailTemplateUrl { get; set; }
 

@@ -3,6 +3,9 @@
     public class AppSettings
     {
         public Lkk2Y_ApiSettings Lkk2Y_ApiService { get; set; }
+        
         public SlackNotificationsSettings SlackNotifications { get; set; }
+        
+        public SmtpSettingsModel SmtpSettings { get; set; }
     }
 }
