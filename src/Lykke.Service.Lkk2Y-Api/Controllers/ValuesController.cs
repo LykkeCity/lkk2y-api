@@ -108,6 +108,19 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 fundsTotal = totalTaks.Result
             };
         }
+        
+        [HttpGet("api/updatetotal")]
+        public async Task<object> UpdateTotal()
+        {
+
+            await _lkk2YOrdersRepository.UpdateTotalAsync();
+            
+            return new
+            {
+                result = "OK"
+            };
+            
+        }
 
     }
 

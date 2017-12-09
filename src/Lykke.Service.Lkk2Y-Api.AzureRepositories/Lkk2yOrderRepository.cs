@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 using Lykke.Service.Lkk2Y_Api.Core;
@@ -6,9 +7,10 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 {
+    
     public class Lkk2YOrderEntity : TableEntity, ILkk2YOrder
     {
-        private static string GeneratePartitionKey()
+        internal static string GeneratePartitionKey()
         {
             return "o";
         }
@@ -78,7 +80,6 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
     }
 
-
     public class Lkk2YOrderRepository : ILkk2YOrdersRepository
     {
         private readonly INoSQLTableStorage<Lkk2YOrderEntity> _tableStorage;
@@ -111,7 +112,7 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
         }
 
-        private async Task UpdateTotal(double addValue)
+        private async Task UpdateTotalAsync(double newTotal)
         {
 
             var partitionKey = Lkk2YTotalEntity.GeneratePartitionKey();
@@ -119,7 +120,7 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
             await _totalTableStorage.ReplaceAsync(partitionKey, rowKey, entity =>
             {
-                entity.Total += addValue;
+                entity.Total = newTotal;
 
                 if (entity.Total > Lkk2YConstants.MaxIcoSize)
                     entity.Total = Lkk2YConstants.MaxIcoSize;
@@ -145,5 +146,20 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
             return entity?.Total ?? 0;
         }
 
+        public async Task UpdateTotalAsync()
+        {
+            var partitionKey = Lkk2YOrderEntity.GeneratePartitionKey();
+
+            var total = 0.0;
+
+            await _tableStorage.GetDataByChunksAsync(partitionKey,
+                chunk => total += chunk.Sum(entity => entity.UsdAmount));
+
+
+            await UpdateTotalAsync(total);
+
+        }
+        
     }
+    
 }

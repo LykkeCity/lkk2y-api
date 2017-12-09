@@ -28,6 +28,9 @@ namespace Lykke.Service.Lkk2Y_Api.Core
         Task RegisterAsync(DateTime dateTime, ILkk2YOrder order);
 
         Task<double> GetUsdTotalAsync();
+
+
+        Task UpdateTotalAsync();
     }
     
 }
