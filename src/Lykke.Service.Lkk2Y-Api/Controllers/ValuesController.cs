@@ -53,6 +53,9 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
             model.UsdAmount = await _rateConverterSrv.ConvertAsync(RateConverterService.LKK2YAsset, 
               RateConverterService.CHFAsset, model.Amount);
 
+            if (model.UsdAmount > Lkk2YConstants.MaxOrderSize)
+                model.UsdAmount = Lkk2YConstants.MaxOrderSize;
+
             Console.WriteLine("Order with USD:" + model.ToJson());
 
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);

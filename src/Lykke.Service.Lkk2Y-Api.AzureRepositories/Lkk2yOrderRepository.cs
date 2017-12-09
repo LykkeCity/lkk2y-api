@@ -120,6 +120,10 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
             await _totalTableStorage.ReplaceAsync(partitionKey, rowKey, entity =>
             {
                 entity.Total += addValue;
+
+                if (entity.Total > Lkk2YConstants.MaxIcoSize)
+                    entity.Total = Lkk2YConstants.MaxIcoSize;
+                
                 return entity;
             });
 
