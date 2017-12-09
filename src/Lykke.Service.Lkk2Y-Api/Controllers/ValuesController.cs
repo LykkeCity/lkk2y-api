@@ -113,11 +113,27 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
         public async Task<object> UpdateTotal()
         {
 
-            await _lkk2YOrdersRepository.UpdateTotalAsync();
+            var total = await _lkk2YOrdersRepository.UpdateTotalAsync();
             
             return new
             {
-                result = "OK"
+                result = "OK",
+                total
+            };
+            
+        }
+        
+        
+        [HttpGet("api/calc")]
+        public async Task<object> CalcTotal()
+        {
+
+            var total = await _lkk2YOrdersRepository.CalcTotalAsync();
+            
+            return new
+            {
+                result = "OK",
+                total
             };
             
         }

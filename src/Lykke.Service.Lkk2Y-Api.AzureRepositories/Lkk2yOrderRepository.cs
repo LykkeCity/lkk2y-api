@@ -146,7 +146,7 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
             return entity?.Total ?? 0;
         }
 
-        public async Task UpdateTotalAsync()
+        public async Task<double> CalcTotalAsync()
         {
             var partitionKey = Lkk2YOrderEntity.GeneratePartitionKey();
 
@@ -156,7 +156,19 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
                 chunk => total += chunk.Sum(entity => entity.UsdAmount));
 
 
+            return total;
+
+
+        }
+
+        public async Task<double> UpdateTotalAsync()
+        {
+
+            var total = await CalcTotalAsync();
+
             await UpdateTotalAsync(total);
+
+            return total;
 
         }
         

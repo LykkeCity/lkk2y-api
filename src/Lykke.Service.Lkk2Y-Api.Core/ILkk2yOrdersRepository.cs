@@ -29,8 +29,8 @@ namespace Lykke.Service.Lkk2Y_Api.Core
 
         Task<double> GetUsdTotalAsync();
 
-
-        Task UpdateTotalAsync();
+        Task<double> CalcTotalAsync();
+        Task<double> UpdateTotalAsync();
     }
     
 }
