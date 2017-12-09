@@ -133,7 +133,6 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         {
             var newEntity = Lkk2YOrderEntity.Create(order);
             await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
-            await UpdateTotal(order.UsdAmount);
         }
 
         public async Task<double> GetUsdTotalAsync()
