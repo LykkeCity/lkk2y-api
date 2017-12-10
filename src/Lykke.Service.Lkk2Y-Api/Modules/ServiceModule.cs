@@ -18,14 +18,12 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
         private readonly IReloadingManager<AppSettings> _settings;
         private readonly ILog _log;
         // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
-        private readonly IServiceCollection _services;
+        private readonly IServiceCollection _services = new ServiceCollection();
 
         public ServiceModule(IReloadingManager<AppSettings> settings, ILog log)
         {
             _settings = settings;
             _log = log;
-
-            _services = new ServiceCollection();
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -93,6 +91,11 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
                 new Lkk2yInfoRepository(
                     AzureTableStorage<Lkk2yInfoEntity>.Create(_settings.ConnectionString(x => x.Lkk2Y_ApiService.Db.Lkk2yConnString), "Info", _log)));
 
+            builder.RegisterInstance<IBlacklistedEmailsRepository>(
+                new BlacklistedEmailsRepository(
+                    AzureTableStorage<BlacklistedEmailEntity>.Create(_settings.ConnectionString(x => x.Lkk2Y_ApiService.Db.Lkk2yConnString), "BlackList", _log)));            
+            
+            
         }
 
     }

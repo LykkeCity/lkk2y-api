@@ -26,6 +26,8 @@ namespace Lykke.Service.Lkk2Y_Api.Core
     public interface ILkk2YOrdersRepository
     {
         Task RegisterAsync(DateTime dateTime, ILkk2YOrder order);
+        
+        Task RegisterIgnoredAsync(DateTime dateTime, ILkk2YOrder order);
 
         Task<double> GetUsdTotalAsync();
 

@@ -15,16 +15,19 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 
         private readonly RateConverterService _rateConverterSrv;
         private readonly TransctionMailSender _transctionMailSender;
+        private readonly IBlacklistedEmailsRepository _blacklistedEmails;
 
 
         public ValuesController(ILkk2YOrdersRepository lkk2YOrdersRepository, 
         ILkk2yInfoRepository lkk2YInfoRepository, RateConverterService rateConverterSrv, 
-            TransctionMailSender transctionMailSender)
+            TransctionMailSender transctionMailSender,
+            IBlacklistedEmailsRepository blacklistedEmails)
         {
             _lkk2YOrdersRepository = lkk2YOrdersRepository;
             _lkk2YInfoRepository = lkk2YInfoRepository;
             _rateConverterSrv = rateConverterSrv;
             _transctionMailSender = transctionMailSender;
+            _blacklistedEmails = blacklistedEmails;
         }
 
         [HttpPost("api/subscribe")]
@@ -33,49 +36,59 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
             return new { result = "OK", model }; 
         }
 
+
+        private static object GetOrderResponse(OrderModel model)
+        {
+            return new
+            {
+                result = "OK",
+                model
+            };
+        }
+
         [HttpPost("api/order")]
         public async Task<object> Order([FromBody] OrderModel model)
         {
 
             var body = await Request.BodyAsStringAsync();
 
-            if (model == null){
-                Console.WriteLine("Order: !!!! Model is null !!!!!; Body="+body);
+            if (model == null)
+            {
+                Console.WriteLine("Order: !!!! Model is null !!!!!; Body=" + body);
 
                 return NotFound();
             }
+
             model.Ip = this.GetIp();
 
-            Console.WriteLine("Order:" + model.ToJson()+"; Body="+body);
+            Console.WriteLine("Order:" + model.ToJson() + "; Body=" + body);
 
             model.Currency = model.Currency.Trim();
 
-            model.UsdAmount = await _rateConverterSrv.ConvertAsync(RateConverterService.LKK2YAsset, 
-              RateConverterService.CHFAsset, model.Amount);
+            model.UsdAmount = await _rateConverterSrv.ConvertAsync(RateConverterService.LKK2YAsset,
+                RateConverterService.CHFAsset, model.Amount);
 
             if (model.UsdAmount > Lkk2YConstants.MaxOrderSize)
                 model.UsdAmount = Lkk2YConstants.MaxOrderSize;
 
             Console.WriteLine("Order with USD:" + model.ToJson());
-            
-            
+
+
             if (DoubleCheckers.HasDouble(model))
-                return new
-                {
-                    result = "OK",
-                    model
-                };
-                
+                return GetOrderResponse(model);
+
+
+            if (await _blacklistedEmails.IsBlacklistedAsync(model.Email))
+            {
+                await _lkk2YOrdersRepository.RegisterIgnoredAsync(DateTime.UtcNow, model); 
+                return GetOrderResponse(model);                
+            }
 
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
 
             await _transctionMailSender.SenderTransactionalEmail(model.Email);
 
-            return new
-            {
-                result = "OK",
-                model
-            };
+            return GetOrderResponse(model);
 
         }
 

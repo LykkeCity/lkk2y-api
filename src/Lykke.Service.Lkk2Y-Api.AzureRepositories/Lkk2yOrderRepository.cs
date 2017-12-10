@@ -14,6 +14,11 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         {
             return "o";
         }
+        
+        internal static string GenerateIgnoredPartitionKey()
+        {
+            return "i";
+        }
 
 
         public double Amount { get; set; }
@@ -48,6 +53,14 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
                 Ip = src.Ip
             };
 
+        }
+
+
+        public static Lkk2YOrderEntity CreateIgnored(ILkk2YOrder src)
+        {
+            var result = Create(src);
+            result.PartitionKey = GenerateIgnoredPartitionKey();
+            return result;
         }
 
     }
@@ -133,6 +146,12 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         public async Task RegisterAsync(DateTime dateTime, ILkk2YOrder order)
         {
             var newEntity = Lkk2YOrderEntity.Create(order);
+            await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
+        }
+
+        public async Task RegisterIgnoredAsync(DateTime dateTime, ILkk2YOrder order)
+        {
+            var newEntity = Lkk2YOrderEntity.CreateIgnored(order);
             await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
         }
 

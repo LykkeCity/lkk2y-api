@@ -19,11 +19,11 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         
     }
     
-    public class BlacklistedEmails : IBlacklistedEmails
+    public class BlacklistedEmailsRepository : IBlacklistedEmailsRepository
     {
         private readonly INoSQLTableStorage<BlacklistedEmailEntity> _tableStorage;
 
-        public BlacklistedEmails(INoSQLTableStorage<BlacklistedEmailEntity> tableStorage)
+        public BlacklistedEmailsRepository(INoSQLTableStorage<BlacklistedEmailEntity> tableStorage)
         {
             _tableStorage = tableStorage;
         }
