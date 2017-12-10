@@ -57,6 +57,15 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 model.UsdAmount = Lkk2YConstants.MaxOrderSize;
 
             Console.WriteLine("Order with USD:" + model.ToJson());
+            
+            
+            if (DoubleCheckers.HasDouble(model))
+                return new
+                {
+                    result = "OK",
+                    model
+                };
+                
 
             await _lkk2YOrdersRepository.RegisterAsync(DateTime.UtcNow, model);
 
