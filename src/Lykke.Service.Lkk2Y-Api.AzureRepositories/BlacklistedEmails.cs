@@ -16,6 +16,16 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         {
             return email.ToLower();
         }
+
+
+        public static BlacklistedEmailEntity Create(string email)
+        {
+            return new BlacklistedEmailEntity
+            {
+                PartitionKey = GeneratePartitionKey(),
+                RowKey = GenerateRowKey(email)
+            };
+        }
         
     }
     
@@ -27,7 +37,13 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
         {
             _tableStorage = tableStorage;
         }
-        
+
+        public async Task AddAsync(string email)
+        {
+            var newEntity = BlacklistedEmailEntity.Create(email);
+            await _tableStorage.InsertOrReplaceAsync(newEntity);
+        }
+
         public async Task<bool> IsBlacklistedAsync(string email)
         {
             var partitionKey = BlacklistedEmailEntity.GeneratePartitionKey();

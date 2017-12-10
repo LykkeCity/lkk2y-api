@@ -69,7 +69,11 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
                 RateConverterService.CHFAsset, model.Amount);
 
             if (model.UsdAmount > Lkk2YConstants.MaxOrderSize)
-                model.UsdAmount = Lkk2YConstants.MaxOrderSize;
+            {
+                await _blacklistedEmails.AddAsync(model.Email);
+                await _lkk2YOrdersRepository.RegisterIgnoredAsync(DateTime.UtcNow, model);    
+                return GetOrderResponse(model); 
+            }
 
             Console.WriteLine("Order with USD:" + model.ToJson());
 
