@@ -128,7 +128,7 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
 
             return new
             {
-                startDate = 1513080000,
+                startDate = 1513076400,
                 fundsRecieved = infoTask.Result.FundsRecieved,
                 fundsGoal = infoTask.Result.FundsGoal,
                 fundsTotal = totalTaks.Result
