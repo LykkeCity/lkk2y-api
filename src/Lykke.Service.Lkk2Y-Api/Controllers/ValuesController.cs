@@ -163,6 +163,12 @@ namespace Lykke.Service.Lkk2Y_Api.Controllers
             };
             
         }
+        
+        [HttpGet("api/isordermade/{email}")]        
+        public async Task<object> IsOrderMade(string email)
+        {
+            return await _lkk2YOrdersRepository.IsEmailRegistered(email);
+        }
 
     }
 

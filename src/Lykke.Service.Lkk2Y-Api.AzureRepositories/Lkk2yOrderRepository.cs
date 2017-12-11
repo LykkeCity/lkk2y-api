@@ -190,7 +190,11 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
             return total;
 
         }
-        
+
+        public Task<bool> IsEmailRegistered(string email)
+        {
+            return Task.FromResult(true);
+        }
     }
     
 }

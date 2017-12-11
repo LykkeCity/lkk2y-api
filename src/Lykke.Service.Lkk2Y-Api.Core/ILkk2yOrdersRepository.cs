@@ -33,6 +33,9 @@ namespace Lykke.Service.Lkk2Y_Api.Core
 
         Task<double> CalcTotalAsync();
         Task<double> UpdateTotalAsync();
+
+
+        Task<bool> IsEmailRegistered(string email);
     }
     
 }
