@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
@@ -93,16 +94,43 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
     }
 
+    public class Lkk2YOrderMadeIndexEntity : TableEntity
+    {
+        public static string GeneratePartitionKey()
+        {
+            return "i";
+        }
+
+        public static string GenerateRowKey(string email)
+        {
+            return email.ToLower();
+        }
+
+
+        public static Lkk2YOrderMadeIndexEntity Create(string email)
+        {
+            return new Lkk2YOrderMadeIndexEntity
+            {
+                PartitionKey = GeneratePartitionKey(),
+                RowKey = GenerateRowKey(email)
+            };
+        }
+        
+    }
+
     public class Lkk2YOrderRepository : ILkk2YOrdersRepository
     {
         private readonly INoSQLTableStorage<Lkk2YOrderEntity> _tableStorage;
 
         readonly INoSQLTableStorage<Lkk2YTotalEntity> _totalTableStorage;
+        private readonly INoSQLTableStorage<Lkk2YOrderMadeIndexEntity> _tableStorageOrderIndex;
 
-        public Lkk2YOrderRepository(INoSQLTableStorage<Lkk2YOrderEntity> tableStorage, 
-                                    INoSQLTableStorage<Lkk2YTotalEntity> totalTableStorage)
+        public Lkk2YOrderRepository(INoSQLTableStorage<Lkk2YOrderEntity> tableStorage,
+            INoSQLTableStorage<Lkk2YTotalEntity> totalTableStorage,
+            INoSQLTableStorage<Lkk2YOrderMadeIndexEntity> tableStorageOrderIndex)
         {
             _totalTableStorage = totalTableStorage;
+            _tableStorageOrderIndex = tableStorageOrderIndex;
             _tableStorage = tableStorage;
 
             InitTotal().Wait();
@@ -143,10 +171,19 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
         }
 
+
+        private async Task AddToIndexAsync(string email)
+        {
+            var newEntity = Lkk2YOrderMadeIndexEntity.Create(email);
+            await _tableStorageOrderIndex.InsertOrReplaceAsync(newEntity);
+        }
+
         public async Task RegisterAsync(DateTime dateTime, ILkk2YOrder order)
         {
             var newEntity = Lkk2YOrderEntity.Create(order);
             await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
+            await AddToIndexAsync(order.Email);
+            AddToCache(order.Email);
         }
 
         public async Task RegisterIgnoredAsync(DateTime dateTime, ILkk2YOrder order)
@@ -182,19 +219,51 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
         public async Task<double> UpdateTotalAsync()
         {
-
             var total = await CalcTotalAsync();
-
             await UpdateTotalAsync(total);
-
             return total;
-
         }
 
-        public Task<bool> IsEmailRegistered(string email)
+        
+        private readonly Dictionary<string, string> _emailRegisteredCache = new Dictionary<string, string>();
+
+
+        private bool IsEmailRegisteredFromCache(string email)
         {
-            return Task.FromResult(true);
+            email = email.ToLower();
+
+            lock (_emailRegisteredCache)
+                return _emailRegisteredCache.ContainsKey(email);
         }
+
+        private void AddToCache(string email)
+        {
+            email = email.ToLower();
+            lock (_emailRegisteredCache)
+                if (!_emailRegisteredCache.ContainsKey(email))
+                 _emailRegisteredCache.Add(email, email);
+        }
+        
+        public async Task<bool> IsEmailRegistered(string email)
+        {
+
+            if (IsEmailRegisteredFromCache(email))
+                return true;
+            
+            var patitionKey = Lkk2YOrderMadeIndexEntity.GeneratePartitionKey();
+            var rowKey = Lkk2YOrderMadeIndexEntity.GenerateRowKey(email);
+            
+            
+            var entity = await _tableStorageOrderIndex.GetDataAsync(patitionKey, rowKey);
+            var result = entity != null;
+            
+            if (result)
+                AddToCache(email);
+
+            return result;
+            
+        }
+        
     }
     
 }

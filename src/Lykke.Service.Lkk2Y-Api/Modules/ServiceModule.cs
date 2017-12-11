@@ -83,7 +83,9 @@ namespace Lykke.Service.Lkk2Y_Api.Modules
              builder.RegisterInstance<ILkk2YOrdersRepository>(
                 new Lkk2YOrderRepository(
                     AzureTableStorage<Lkk2YOrderEntity>.Create(_settings.ConnectionString(x => x.Lkk2Y_ApiService.Db.Lkk2yConnString), "Orders", _log),
-                    AzureTableStorage<Lkk2YTotalEntity>.Create(_settings.ConnectionString(x => x.Lkk2Y_ApiService.Db.Lkk2yConnString), "OrdersTotal", _log)
+                    AzureTableStorage<Lkk2YTotalEntity>.Create(_settings.ConnectionString(x => x.Lkk2Y_ApiService.Db.Lkk2yConnString), "OrdersTotal", _log),
+                    AzureTableStorage<Lkk2YOrderMadeIndexEntity>.Create(_settings.ConnectionString(x => x.Lkk2Y_ApiService.Db.Lkk2yConnString), "Orders", _log)
+                    
                     ));
 
 
