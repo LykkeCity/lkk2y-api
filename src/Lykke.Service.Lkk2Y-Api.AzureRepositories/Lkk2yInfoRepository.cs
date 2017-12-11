@@ -38,7 +38,7 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
     public class Lkk2yInfoRepository : ILkk2yInfoRepository
     {
-        private INoSQLTableStorage<Lkk2yInfoEntity> _tableStorage;
+        private readonly INoSQLTableStorage<Lkk2yInfoEntity> _tableStorage;
 
         private Lkk2yInfoEntity _cache;
         public Lkk2yInfoRepository(INoSQLTableStorage<Lkk2yInfoEntity> tableStorage)
