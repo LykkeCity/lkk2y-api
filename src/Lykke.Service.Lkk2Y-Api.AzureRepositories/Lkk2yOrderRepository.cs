@@ -143,8 +143,7 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
 
             try
             {
-                var newEntity = Lkk2YTotalEntity.Create();
-                await _totalTableStorage.InsertAsync(newEntity);
+                await CalcTotalAsync();
             }
             catch (Exception)
             {
