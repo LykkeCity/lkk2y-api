@@ -209,7 +209,11 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
             var total = 0.0;
 
             await _tableStorage.GetDataByChunksAsync(partitionKey,
-                chunk => total += chunk.Sum(entity => entity.UsdAmount));
+                chunk => total += chunk.Sum(entity =>
+                {
+                    AddToCache(entity.Email);
+                    return entity.UsdAmount;
+                }));
 
 
             return total;
