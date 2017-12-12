@@ -177,12 +177,15 @@ namespace Lykke.Service.Lkk2Y_Api.AzureRepositories
             await _tableStorageOrderIndex.InsertOrReplaceAsync(newEntity);
         }
 
-        public async Task RegisterAsync(DateTime dateTime, ILkk2YOrder order)
+        public Task RegisterAsync(DateTime dateTime, ILkk2YOrder order)
         {
+            return Task.FromResult(0);
+            
+            /*
             var newEntity = Lkk2YOrderEntity.Create(order);
             await _tableStorage.InsertAndGenerateRowKeyAsDateTimeAsync(newEntity, dateTime);
             await AddToIndexAsync(order.Email);
-            AddToCache(order.Email);
+            AddToCache(order.Email);*/
         }
 
         public async Task RegisterIgnoredAsync(DateTime dateTime, ILkk2YOrder order)
